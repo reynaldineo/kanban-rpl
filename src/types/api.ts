@@ -9,7 +9,7 @@ declare module "axios" {
   }
 }
 
-type ResultMessage = {
+export type ResultMessage = {
   en: string;
 };
 
