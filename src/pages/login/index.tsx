@@ -3,7 +3,7 @@ import Input from "@/components/form/Input";
 import { REGEX } from "@/constants/regex";
 import Login from "@/hooks/auth/Login";
 import AuthLayout from "@/layout/AuthLayout";
-import { LoginType } from "@/types/auth";
+import { LoginType } from "@/types/auth/login";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
@@ -14,13 +14,11 @@ export default function LoginPage() {
   const { handleSubmit } = methods;
 
   // * ====== Hook API ======
-  const { mutateLogin, isPending, isSuccess } = Login();
-  const router = useRouter();
+  const { mutateLogin, isPending } = Login();
 
   // * ====== Handle Submit ======
   const onSubmit: SubmitHandler<LoginType> = (data) => {
     mutateLogin(data);
-    if (isSuccess) router.push("/board");
   };
 
   return (

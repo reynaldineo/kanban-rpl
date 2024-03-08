@@ -3,7 +3,7 @@ import Input from "@/components/form/Input";
 import { REGEX } from "@/constants/regex";
 import Register from "@/hooks/auth/Register";
 import AuthLayout from "@/layout/AuthLayout";
-import { RegisterType } from "@/types/auth";
+import { RegisterType } from "@/types/auth/register";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";

@@ -2,16 +2,17 @@ import { produce } from "immer";
 import { create } from "zustand";
 
 import { removeToken } from "@/libs/cookies";
-import { LoginResponseType } from "@/types/auth";
+import { User, WithToken } from "@/types/auth/login";
+import { toast } from "sonner";
 
 interface AuthState {
-  user: LoginResponseType | null;
+  user: (User & WithToken) | null;
   isAuthed: boolean;
   isLoading: boolean;
 }
 
 interface AuthAction {
-  login: (user: LoginResponseType) => void;
+  login: (user: User & WithToken) => void;
   logout: () => void;
   stopLoading: () => void;
 }
@@ -36,6 +37,7 @@ const useAuthStore = create<AuthState & AuthAction>((set) => ({
         state.isAuthed = false;
       })
     );
+    toast.success("Logout successfully!");
   },
   stopLoading: () =>
     set(
