@@ -4,9 +4,9 @@ import clsxm from "@/libs/clxsm";
 import { useDragTaskStore } from "@/stores/useDragTaskStore";
 import { BoardTitle } from "@/types/tasks/task";
 import { FaPlus } from "react-icons/fa";
-import Card from "./Card";
-import Loading from "../../../components/Loading";
-import AddTaskModal from "../../../components/modals/AddTaskModal";
+import Loading from "@/components/Loading";
+import AddTaskModal from "@/components/modals/AddTaskModal";
+import Card from "@/pages/board/components/Card";
 
 export default function Board({ title }: { title: keyof typeof BoardTitle }) {
   const { taskData, refetch } = GetTaskData();
@@ -22,15 +22,16 @@ export default function Board({ title }: { title: keyof typeof BoardTitle }) {
   );
 
   // * Handle Dropped Task
-  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     draggedTaskId &&
-      (await mutateUpdatTask({
+      mutateUpdatTask({
         taskId: draggedTaskId,
         taskData: { status: title },
-      }));
-    await resetDraggedTaskId();
-    await refetch();
+      }).then(() => {
+        refetch();
+      });
+    resetDraggedTaskId();
   };
 
   return (

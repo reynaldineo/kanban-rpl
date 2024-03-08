@@ -3,3 +3,8 @@ export type UpdateAttachmentType = {
   link: string;
   displayText: string;
 };
+
+export type Attachment = {
+  link: string;
+  displayText: string;
+};

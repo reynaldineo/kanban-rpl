@@ -2,8 +2,10 @@ import BoardArea from "@/pages/board/container/BoardArea";
 import AddModal from "@/components/modals/AddTaskModal";
 import { FaPlus } from "react-icons/fa";
 import Navbar from "@/components/Navbar";
+import withAuth from "@/components/hoc/withAuth";
 
-export default function BoardPage() {
+export default withAuth(BoardPage);
+function BoardPage() {
   return (
     <main className="min-h-screen ">
       <Navbar />
@@ -13,10 +15,11 @@ export default function BoardPage() {
           {({ openModal }) => (
             <button
               type="button"
-              className="p-2 bg-blue-500 text-white rounded-lg flex items-center"
+              className="p-2 bg-blue-500 text-white rounded-lg flex items-center "
               onClick={openModal}
             >
-              <FaPlus className="mr-2" /> Add New Task
+              <FaPlus />
+              <span className="hidden md:block ml-2">Add New Task</span>
             </button>
           )}
         </AddModal>

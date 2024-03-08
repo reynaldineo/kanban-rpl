@@ -79,7 +79,7 @@ export function ModalRoot({
                 <header className="flex items-center justify-between px-4 pt-4 sm:px-6 sm:pb-3.5">
                   <Dialog.Title
                     className={clsxm(
-                      "pr-2 text-xl font-semibold",
+                      "pr-2 text-2xl font-semibold",
                       titleClassName
                     )}
                   >

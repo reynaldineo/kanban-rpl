@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import api from "@/libs/api";
 
 export default function DeleteAttachment() {
-  const { mutate: mutateDeleteAttachment } = useMutation({
+  const { mutateAsync: mutateDeleteAttachment, isPending } = useMutation({
     mutationFn: ({
       attachmentId,
       taskId,
@@ -10,8 +10,10 @@ export default function DeleteAttachment() {
       attachmentId: string;
       taskId: string;
     }) => {
-      return api.delete(`/task/${taskId}/attachment/${attachmentId}`);
+      return api.delete(`/task/${taskId}/attachment/${attachmentId}`, {
+        toastify: true,
+      });
     },
   });
-  return { mutateDeleteAttachment };
+  return { mutateDeleteAttachment, isPending };
 }

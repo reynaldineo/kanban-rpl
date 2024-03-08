@@ -1,18 +1,16 @@
+import Button from "@/components/Button";
+import Modal from "@/components/Modal";
+import useAuthStore from "@/stores/useAuthStore";
 import { useState } from "react";
-import DeleteTask from "@/hooks/DeleteTask";
-import Modal from "../Modal";
-import Button from "../Button";
 
 type ModalReturnType = {
   openModal: () => void;
 };
 
-export default function DeleteTaskModal({
+export default function LogoutModal({
   children,
-  taskId,
 }: {
   children: (props: ModalReturnType) => JSX.Element;
-  taskId: string;
 }) {
   // * ====== Modal ======
   const [open, setOpen] = useState(false);
@@ -20,30 +18,24 @@ export default function DeleteTaskModal({
     openModal: () => setOpen(true),
   };
 
-  const { mutateDeletTask, isPending } = DeleteTask();
-  const handleDelete = (taskId: string) => {
-    mutateDeletTask(taskId);
-    setOpen(false);
-  };
+  const { logout, isLoading } = useAuthStore();
 
   return (
     <>
       {children(modalReturn)}
-      <Modal open={open} setOpen={setOpen} title="Delete Task">
+      <Modal open={open} setOpen={setOpen} title="Logout">
         <Modal.Section>
-          <p className="mt-2 md:mt-0 mb-3">
-            Are you sure you want to delete this task?
-          </p>
+          <p className="mt-2 md:mt-0 mb-3">Are you sure you want to log out?</p>
           <div className="flex justify-end space-x-3">
             <Button onClick={() => setOpen(false)} variant="gray">
               Cancel
             </Button>
             <Button
-              onClick={() => handleDelete(taskId)}
-              isLoading={isPending}
+              onClick={() => logout()}
+              isLoading={isLoading}
               variant="danger"
             >
-              Delete
+              Logout
             </Button>
           </div>
         </Modal.Section>

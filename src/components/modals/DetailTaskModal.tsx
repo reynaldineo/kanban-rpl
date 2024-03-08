@@ -2,12 +2,19 @@ import UpdateTask from "@/hooks/UpdateTask";
 import clsxm from "@/libs/clxsm";
 import { UpdateTaskData } from "@/types/tasks/editTask";
 import { Task } from "@/types/tasks/task";
-import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useState } from "react";
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
 import Modal from "../Modal";
 import Tag from "../Tag";
-import EditAttachmentModal from "./EditAttachmentModal";
+import EditAttachmentModal from "./attachments/EditAttachmentModal";
+import Input from "../form/Input";
+import { format } from "date-fns";
+import SelectInput from "../form/SelectInput";
+import Button from "../Button";
+import AddAttachmentModal from "./attachments/AddAttachmentModal";
+import AddTagModal from "./AddTagModal";
+import GetTaskData from "@/hooks/GetTaskData";
 
 type ModalReturnType = {
   openModal: () => void;
@@ -21,24 +28,38 @@ export default function DetailTaskModal({
   task: Task;
 }) {
   // * ===== Edit Form =====
-  const [isEdit, setIsEdit] = React.useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isDetailEdit, setDetailEdit] = useState(false);
 
   // * ===== Modal =====
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const modalReturn: ModalReturnType = {
     openModal: () => {
       setOpen(true);
       setIsEdit(false);
+      setDetailEdit(false);
     },
   };
 
   // * ===== Form =====
-  const { register, handleSubmit } = useForm<UpdateTaskData>();
+  const methods = useForm<UpdateTaskData>({
+    mode: "onSubmit",
+    defaultValues: {
+      title: task.title,
+      description: task.description,
+      dueDate: format(new Date(task.dueDate), "yyyy-MM-dd"),
+    },
+  });
+  const { handleSubmit } = methods;
 
   // * ===== Handle Form =====
-  const { mutateUpdatTask } = UpdateTask();
+  const { mutateUpdatTask, isPending } = UpdateTask();
+  const { refetch } = GetTaskData();
   const onSubmit: SubmitHandler<UpdateTaskData> = (data) => {
-    mutateUpdatTask({ taskId: task._id, taskData: data });
+    isDetailEdit &&
+      mutateUpdatTask({ taskId: task._id, taskData: data }).then(() => {
+        refetch();
+      });
   };
 
   return (
@@ -46,117 +67,106 @@ export default function DetailTaskModal({
       {children(modalReturn)}
       <Modal open={open} setOpen={setOpen} title="Detail Task">
         <Modal.Section>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex-col space-y-4"
-          >
-            <div>
-              <label htmlFor="title">Title</label>
-              <input
-                {...register("title")}
-                id="title"
-                disabled={!isEdit}
-                defaultValue={task.title}
-                className="border px-1 mt-1.5 w-full"
-              />
-            </div>
-            <div>
-              <label htmlFor="description">Description</label>
-              <input
-                {...register("description")}
-                id="description"
-                disabled={!isEdit}
-                defaultValue={task.description}
-                className="border px-1 mt-1.5 w-full"
-              />
-            </div>
-            <div>
-              <label htmlFor="dueDate">Due Date</label>
-              <input
-                {...register("dueDate")}
-                disabled={!isEdit}
-                type="date"
-                defaultValue={task.dueDate}
+          <FormProvider {...methods}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex-col space-y-4"
+            >
+              <Input id="title" label="Title" disabled={!isEdit} />
+              <Input id="description" label="Description" disabled={!isEdit} />
+              <Input
                 id="dueDate"
-                name="dueDate"
-                className="border px-1 mt-1.5 w-full"
+                type="date"
+                label="Due date"
+                disabled={!isEdit}
               />
-            </div>
-            <div>
-              <label htmlFor="status">Status</label>
-              <select
-                {...register("status")}
+              <SelectInput
+                id="status"
+                label="Status"
+                placeholder="Select Status"
                 disabled={!isEdit}
                 defaultValue={task.status}
-                id="status"
-                name="status"
-                className="border px-1 mt-1.5 w-full"
               >
-                <option value="" hidden>
-                  Select Status
-                </option>
                 <option value="To Do">To Do</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Done">Done</option>
-              </select>
-            </div>
+              </SelectInput>
 
-            <div>
-              <label htmlFor="status">Tag</label>
-              <div className="flex items-center flex-row flex-wrap gap-1.5">
-                {task.tags.map((tag) => (
-                  <Tag title={tag} key={tag} />
-                ))}
-                <button className="flex items-center bg-gray-200 hover:bg-gray-400 w-fit rounded-lg px-2.5 py-1 text-sm mt-2 ml-2">
-                  <FaPlus className="mr-2" /> Add Tag
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <label>Attachment</label>
-              <div className="flex items-center flex-row flex-wrap gap-1.5">
-                {task.attachments.map((attachment) => (
-                  <EditAttachmentModal
-                    attachment={attachment}
-                    taskId={task._id}
-                    key={attachment._id}
-                  >
+              <div>
+                <label htmlFor="status">Tag</label>
+                <div className="flex items-center flex-row flex-wrap gap-1.5">
+                  {task.tags.map((tag) => (
+                    <Tag title={tag} key={tag} />
+                  ))}
+                  <AddTagModal task={task}>
                     {({ openModal }) => (
-                      <div
+                      <button
                         onClick={openModal}
-                        className="px-2.5 py-1.5 bg-teal-500 rounded-lg text-white w-fit text-sm"
+                        type="button"
+                        className="flex items-center bg-gray-200 hover:bg-gray-400 w-fit rounded-lg px-2.5 py-1 text-sm mt-2 ml-2"
                       >
-                        {attachment.displayText}
-                      </div>
+                        <FaPlus className="mr-2" /> Add Tag
+                      </button>
                     )}
-                  </EditAttachmentModal>
-                ))}
-                <button className="flex items-center bg-gray-200 hover:bg-gray-400 w-fit rounded-lg px-2.5 py-1 text-sm mt-2 ml-2">
-                  <FaPlus className="mr-2" /> Add Attachment
-                </button>
+                  </AddTagModal>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <button
-                onClick={() => {
-                  if (!isEdit) setIsEdit(true);
-                  else if (isEdit) {
-                    setIsEdit(false);
-                    setOpen(false);
-                  }
-                }}
-                type="submit"
-                className={clsxm(
-                  "px-2 py-1 w-full mt-4 rounded-xl text-white",
-                  isEdit ? "bg-green-400" : "bg-blue-400"
-                )}
-              >
-                {isEdit ? "Update" : "Edit"}
-              </button>
-            </div>
-          </form>
+              <div>
+                <label>Attachment</label>
+                <div className="flex items-center flex-row flex-wrap gap-1.5">
+                  {task.attachments.map((attachment) => (
+                    <EditAttachmentModal
+                      attachment={attachment}
+                      taskId={task._id}
+                      key={attachment._id}
+                    >
+                      {({ openModal }) => (
+                        <div
+                          onClick={openModal}
+                          className="px-2.5 py-1.5 bg-teal-500 rounded-lg text-white w-fit text-sm"
+                        >
+                          {attachment.displayText}
+                        </div>
+                      )}
+                    </EditAttachmentModal>
+                  ))}
+                  <AddAttachmentModal task={task}>
+                    {({ openModal }) => (
+                      <button
+                        type="button"
+                        onClick={openModal}
+                        className="flex items-center bg-gray-200 hover:bg-gray-400 w-fit rounded-lg px-2.5 py-1 text-sm mt-2 ml-2"
+                      >
+                        <FaPlus className="mr-2" /> Add Attachment
+                      </button>
+                    )}
+                  </AddAttachmentModal>
+                </div>
+              </div>
+
+              <div>
+                <Button
+                  onClick={() => {
+                    if (!isEdit) {
+                      setIsEdit(true);
+                    } else if (isEdit) {
+                      setIsEdit(false);
+                      setOpen(false);
+                      setDetailEdit(true);
+                    }
+                  }}
+                  variant={isEdit ? "success" : "primary"}
+                  type={isEdit ? "button" : "submit"}
+                  size="sm"
+                  className={clsxm(" w-full mt-4 ")}
+                  isLoading={isPending}
+                >
+                  {isEdit ? "Update" : "Edit"}
+                </Button>
+              </div>
+            </form>
+          </FormProvider>
         </Modal.Section>
       </Modal>
     </>

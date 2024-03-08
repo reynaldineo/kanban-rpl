@@ -3,7 +3,7 @@ import { UpdateTaskData } from "@/types/tasks/editTask";
 import { useMutation } from "@tanstack/react-query";
 
 export default function UpdateTask() {
-  const { mutate: mutateUpdatTask, isPending } = useMutation({
+  const { mutateAsync: mutateUpdatTask, isPending } = useMutation({
     mutationFn: ({
       taskId,
       taskData,

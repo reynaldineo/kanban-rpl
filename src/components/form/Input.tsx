@@ -14,6 +14,7 @@ export type InputProps = {
   classname?: string;
   type?: string;
   readonly?: boolean;
+  defaultValue?: string;
 } & React.ComponentPropsWithoutRef<"input">;
 
 export default function Input({
@@ -26,6 +27,7 @@ export default function Input({
   className,
   type = "text",
   readOnly = false,
+  defaultValue,
   ...rest
 }: InputProps) {
   const {
@@ -61,10 +63,11 @@ export default function Input({
             name={id}
             readOnly={readOnly}
             disabled={readOnly}
+            defaultValue={defaultValue}
             className={clsxm(
-              "h-full w-full rounded-md border border-[#808080] px-3 py-2.5",
+              "h-full w-full rounded-md border border-[#808080] px-3 py-2",
               "focus:outline-1 focus:outline-[#76E8FF] focus:ring-inset",
-              "bg-neutral-10 text-sm",
+              "bg-neutral-10 text-base",
               "hover:ring-1 hover:ring-inset hover:ring-[#000]",
               "placeholder:text-sm placeholder:text-[#9AA2B1] focus:placeholder:text-[#092540]",
               readOnly && "cursor-not-allowed",

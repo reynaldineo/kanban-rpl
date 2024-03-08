@@ -3,8 +3,8 @@ import { UpdateAttachmentType } from "@/types/tasks/attachment";
 import { useMutation } from "@tanstack/react-query";
 
 export default function UpdateAttachment() {
-  const { mutate: mutateUpdateAttachment } = useMutation({
-    mutationFn: async ({
+  const { mutateAsync: mutateUpdateAttachment, isPending } = useMutation({
+    mutationFn: ({
       attachmentId,
       taskId,
       data,
@@ -13,8 +13,10 @@ export default function UpdateAttachment() {
       taskId: string;
       data: UpdateAttachmentType;
     }) => {
-      return await api.put(`/task/${taskId}/attachment/${attachmentId}`, data);
+      return api.put(`/task/${taskId}/attachment/${attachmentId}`, data, {
+        toastify: true,
+      });
     },
   });
-  return { mutateUpdateAttachment };
+  return { mutateUpdateAttachment, isPending };
 }

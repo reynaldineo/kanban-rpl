@@ -5,11 +5,16 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import Tag from "@/components/Tag";
 import DeleteTaskModal from "@/components/modals/DeleteModal";
 import { format } from "date-fns";
-import DetailTaskModal from "../../../components/modals/DetailTaskModal";
+import DetailTaskModal from "@/components/modals/DetailTaskModal";
+import Loading from "@/components/Loading";
 
 export default function Card({ cardData }: { cardData: Task }) {
-  const taskDueDate = format(new Date(cardData.dueDate), "dd/MM/yyyy");
   const { setDraggedTaskId } = useDragTaskStore();
+
+  if (!cardData) {
+    return <Loading />;
+  }
+  const taskDueDate = format(new Date(cardData.dueDate), "dd/MM/yyyy");
 
   return (
     <div

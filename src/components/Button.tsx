@@ -8,6 +8,7 @@ enum ButtonVariant {
   "warning",
   "danger",
   "success",
+  "gray",
 }
 
 enum ButtonSize {
@@ -78,10 +79,14 @@ export default function Button({
             "hover:bg-green-500 hover:text-gray-300",
             "active:bg-green-400 active:text-black",
           ],
+          variant === "gray" && [
+            "bg-gray-500 text-white",
+            "hover:bg-gray-500 hover:text-gray-300",
+            "active:bg-gray-400 active:text-black",
+          ],
         ],
         "disabled:cursor-not-allowed",
-        isLoading &&
-          "relative text-transparent transition-none hover:text-transparent active:text-transparent disabled:cursor-wait",
+        isLoading && "relative cursor-wait transition-none ",
         className
       )}
       {...rest}
@@ -96,7 +101,9 @@ export default function Button({
           <Icon className={clsxm("text-2xl font-semibold", iconClassName)} />
         </div>
       )}
-      <span className={textClassName}>{children}</span>
+      <span className={clsxm(isLoading && "hidden", textClassName)}>
+        {children}
+      </span>
     </button>
   );
 }

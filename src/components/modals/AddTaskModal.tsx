@@ -1,13 +1,12 @@
-import * as React from "react";
-
 import Modal from "@/components/Modal";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { PostTask } from "@/types/tasks/postTask";
 import Input from "@/components/form/Input";
 import Button from "../Button";
 import AddTask from "@/hooks/AddTask";
-import RequiredLabel from "../form/RequiredLabel";
 import GetTaskData from "@/hooks/GetTaskData";
+import SelectInput from "../form/SelectInput";
+import { useState } from "react";
 
 type ModalReturnType = {
   openModal: () => void;
@@ -21,7 +20,7 @@ export default function AddTaskModal({
   defaultStatus?: string;
 }) {
   // * ====== Modal ======
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const modalReturn: ModalReturnType = {
     openModal: () => setOpen(true),
   };
@@ -70,26 +69,19 @@ export default function AddTaskModal({
                   required: "Due date is required!",
                 }}
               />
-              <div className="flex flex-col">
-                <label htmlFor="status" className="label">
-                  Status <RequiredLabel />
-                </label>
-                <select
-                  {...register("status")}
-                  defaultValue={defaultStatus}
-                  id="status"
-                  name="status"
-                  className="input"
-                  required
-                >
-                  <option value="" hidden>
-                    Select Status
-                  </option>
-                  <option value="To Do">To Do</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Done">Done</option>
-                </select>
-              </div>
+              <SelectInput
+                id="status"
+                label="Status"
+                placeholder="Select Status"
+                defaultValue={defaultStatus}
+                validation={{
+                  required: "Status is required!",
+                }}
+              >
+                <option value="To Do">To Do</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Done">Done</option>
+              </SelectInput>
               <Button
                 type="submit"
                 size="sm"
