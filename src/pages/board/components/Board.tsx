@@ -4,9 +4,9 @@ import clsxm from "@/libs/clxsm";
 import { useDragTaskStore } from "@/stores/useDragTaskStore";
 import { BoardTitle } from "@/types/tasks/task";
 import { FaPlus } from "react-icons/fa";
-import Loading from "@/components/Loading";
 import AddTaskModal from "@/components/modals/AddTaskModal";
 import Card from "@/pages/board/components/Card";
+import SkeletonBoard from "./SkeletonBoard";
 
 export default function Board({ title }: { title: keyof typeof BoardTitle }) {
   const { taskData, refetch } = GetTaskData();
@@ -14,7 +14,7 @@ export default function Board({ title }: { title: keyof typeof BoardTitle }) {
   const { mutateUpdatTask } = UpdateTask();
 
   if (!taskData) {
-    return <Loading />;
+    return <SkeletonBoard />;
   }
 
   const DataByStatus = taskData.data.data.tasks.filter(
