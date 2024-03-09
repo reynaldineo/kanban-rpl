@@ -8,6 +8,8 @@ import {
 } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
 import { Toaster } from "sonner";
+import SEO from "../seo.config";
+import { DefaultSeo } from "next-seo";
 
 // * ===== React Query =====
 const defaultQueryFn = async ({ queryKey }: QueryOptions) => {
@@ -25,6 +27,7 @@ const queryClient = new QueryClient({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
+      <DefaultSeo {...SEO} />
       <Component {...pageProps} />
       <Toaster richColors closeButton position="top-center" />
     </QueryClientProvider>
