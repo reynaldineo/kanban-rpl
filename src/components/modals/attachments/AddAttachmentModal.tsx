@@ -19,15 +19,11 @@ export default function AddAttachmentModal({
   children: (props: ModalReturnType) => JSX.Element;
   task: Task;
 }) {
-  // * ===== Edit Form =====
-  const [isEdit, setIsEdit] = useState(false);
-
   // * ===== Modal =====
   const [open, setOpen] = useState(false);
   const modalReturn: ModalReturnType = {
     openModal: () => {
       setOpen(true);
-      setIsEdit(false);
     },
   };
 
@@ -58,6 +54,7 @@ export default function AddAttachmentModal({
               <Input
                 id="displayText"
                 label="Display Text"
+                placeholder="Input display text here..."
                 validation={{
                   required: "Display text is required!",
                 }}
@@ -65,6 +62,7 @@ export default function AddAttachmentModal({
               <Input
                 id="link"
                 label="Link"
+                placeholder="Input link here..."
                 validation={{
                   required: "Link is required!",
                 }}

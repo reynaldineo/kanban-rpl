@@ -50,6 +50,7 @@ export default function AddTaskModal({
               <Input
                 id="title"
                 label="Title"
+                placeholder="Input title here..."
                 validation={{
                   required: "Title is required!",
                 }}
@@ -57,6 +58,7 @@ export default function AddTaskModal({
               <Input
                 id="description"
                 label="Description"
+                placeholder="Input description here..."
                 validation={{
                   required: "Description is required!",
                 }}

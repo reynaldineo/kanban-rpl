@@ -48,7 +48,14 @@ export default function AddTagModal({
         <Modal.Section>
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Input id="tags" label="Tag" />
+              <Input
+                id="tags"
+                label="Tag"
+                placeholder="Input tag here..."
+                validation={{
+                  required: "Tag is required!",
+                }}
+              />
               <Button
                 type="submit"
                 variant="primary"
