@@ -3,11 +3,13 @@ import AddModal from "@/components/modals/AddTaskModal";
 import { FaPlus } from "react-icons/fa";
 import Navbar from "@/components/Navbar";
 import withAuth from "@/components/hoc/withAuth";
+import Seo from "@/components/Seo";
 
 export default withAuth(BoardPage);
 function BoardPage() {
   return (
     <main className="min-h-screen ">
+      <Seo templateTitle="TaskBoard" />
       <Navbar />
       <div className="flex items-center justify-between mr-10 py-5 px-8">
         <p className="text-3xl font-bold pl-5">TaskBoard</p>

@@ -1,11 +1,11 @@
 import Button from "@/components/Button";
+import Seo from "@/components/Seo";
 import Input from "@/components/form/Input";
 import { REGEX } from "@/constants/regex";
 import Login from "@/hooks/auth/Login";
 import AuthLayout from "@/layout/AuthLayout";
 import { LoginType } from "@/types/auth/login";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 export default function LoginPage() {
@@ -23,6 +23,7 @@ export default function LoginPage() {
 
   return (
     <AuthLayout>
+      <Seo templateTitle="Login" />
       <div className="space-y-6 w-full px-10 md:px-24">
         <p className="text-3xl font-bold">Login Page</p>
         <FormProvider {...methods}>

@@ -1,4 +1,5 @@
 import Button from "@/components/Button";
+import Seo from "@/components/Seo";
 import Input from "@/components/form/Input";
 import { REGEX } from "@/constants/regex";
 import Register from "@/hooks/auth/Register";
@@ -26,6 +27,7 @@ export default function RegisterPage() {
 
   return (
     <AuthLayout>
+      <Seo templateTitle="Register" />
       <div className="space-y-6 w-full px-10 md:px-24">
         <p className="text-3xl font-bold">Register Page</p>
         <FormProvider {...methods}>
