@@ -3,7 +3,7 @@ import { PostTask } from "@/types/tasks/postTask";
 import { useMutation } from "@tanstack/react-query";
 
 export default function AddTask() {
-  const { mutate: mutateNewTask, isPending } = useMutation({
+  const { mutateAsync: mutateNewTask, isPending } = useMutation({
     mutationFn: (newTask: PostTask) => {
       return api.post("/task", newTask, { toastify: true });
     },

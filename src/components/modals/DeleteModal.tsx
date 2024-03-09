@@ -2,6 +2,7 @@ import { useState } from "react";
 import DeleteTask from "@/hooks/DeleteTask";
 import Modal from "../Modal";
 import Button from "../Button";
+import GetTaskData from "@/hooks/GetTaskData";
 
 type ModalReturnType = {
   openModal: () => void;
@@ -20,9 +21,11 @@ export default function DeleteTaskModal({
     openModal: () => setOpen(true),
   };
 
+  // * ====== Handle Delete Task ======
   const { mutateDeletTask, isPending } = DeleteTask();
+  const { refetch } = GetTaskData();
   const handleDelete = (taskId: string) => {
-    mutateDeletTask(taskId);
+    mutateDeletTask(taskId).then(() => refetch());
     setOpen(false);
   };
 

@@ -34,9 +34,8 @@ export default function AddTaskModal({
   const { refetch } = GetTaskData();
 
   // * ====== Handle Submit ======
-  const onSubmit: SubmitHandler<PostTask> = async (data) => {
-    await mutateNewTask(data);
-    await refetch();
+  const onSubmit: SubmitHandler<PostTask> = (data) => {
+    mutateNewTask(data).then(() => refetch());
     setOpen(false);
   };
 
